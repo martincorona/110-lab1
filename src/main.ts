@@ -11,52 +11,29 @@ const stage = new Konva.Stage({
 const layer = new Konva.Layer();
 stage.add(layer);
 
-// --- Create a group to hold all the lemon parts ---
-// This lets us position and rotate them all together.
-const lemonGroup = new Konva.Group({
+// --- create our shape ---
+// To create this exact custom shape, we must use Konva.Path,
+// which draws a shape based on SVG path commands.
+
+const lemon = new Konva.Path({
   x: stage.width() / 2,
   y: stage.height() / 2,
-  rotation: -15, // Give the lemon a slight tilt
-});
-
-// 1. Create the main body, making it a bit more oval
-const lemonBody = new Konva.Ellipse({
-  x: 0, // Position is relative to the group's center
-  y: 0,
-  radiusX: 100,
-  radiusY: 60, // A little flatter than before
+  // The 'data' string defines the custom shape.
+  // M = Move To a point
+  // C = Draw a Cubic Bezier curve to a new point
+  data: 'M 0 -5 C -50 -50, 50 -70, 70 -10 C 90 50, -10 55, 0 -5',
   fill: 'yellow',
   stroke: 'black',
-  strokeWidth: 4,
+  strokeWidth: 8, // Increased stroke width to better match the image
+  scaleX: 2.5,   // Made the shape larger and wider
+  scaleY: 2.5,
+  offsetX: 35,   // Centering adjustments
+  offsetY: -25,
 });
 
-// 2. Create a smaller bump on one end
-const leftBump = new Konva.Circle({
-  x: -98, // Positioned near the left edge of the ellipse
-  y: 8,   // Shifted slightly down to look more natural
-  radius: 14,
-  fill: 'yellow',
-  stroke: 'black',
-  strokeWidth: 4,
-});
-
-// 3. Create a larger, more prominent bump on the other end
-const rightBump = new Konva.Circle({
-  x: 95, // Positioned near the right edge
-  y: -6, // Shifted slightly up
-  radius: 18,
-  fill: 'yellow',
-  stroke: 'black',
-  strokeWidth: 4,
-});
-
-// Add the shapes to the group (order matters for stroke overlap)
-lemonGroup.add(lemonBody);
-lemonGroup.add(leftBump);
-lemonGroup.add(rightBump);
-
-// Finally, add the single group to the layer
-layer.add(lemonGroup);
+// add the shape to the layer
+layer.add(lemon);
 
 // add the layer to the stage
 stage.add(layer);
+
