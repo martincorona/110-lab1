@@ -1,39 +1,39 @@
 import Konva from 'konva';
 
-// first we need to create a stage
+// create stage
 const stage = new Konva.Stage({
   container: 'container',
   width: window.innerWidth,
   height: window.innerHeight,
 });
 
-// then create layer
+// create layer
 const layer = new Konva.Layer();
 stage.add(layer);
 
-// --- create our shape ---
-// To create this exact custom shape, we must use Konva.Path,
-// which draws a shape based on SVG path commands.
-
-const lemon = new Konva.Path({
+// --- Group for lemon ---
+const lemonGroup = new Konva.Group({
   x: stage.width() / 2,
   y: stage.height() / 2,
-  // The 'data' string defines the custom shape.
-  // M = Move To a point
-  // C = Draw a Cubic Bezier curve to a new point
-  data: 'M 0 -5 C -50 -50, 50 -70, 70 -10 C 90 50, -10 55, 0 -5',
-  fill: 'yellow',
-  stroke: 'black',
-  strokeWidth: 8, // Increased stroke width to better match the image
-  scaleX: 2.5,   // Made the shape larger and wider
-  scaleY: 2.5,
-  offsetX: 35,   // Centering adjustments
-  offsetY: -25,
 });
 
-// add the shape to the layer
-layer.add(lemon);
+// Use a custom shape with Bezier-like smooth lines
+const lemonShape = new Konva.Line({
+  points: [
+    -60, 0,   // left
+    -20, -50, // top-left curve
+    40, -40,  // top-right curve
+    60, 0,    // right
+    20, 50,   // bottom-right curve
+    -40, 40,  // bottom-left curve
+  ],
+  fill: 'yellow',
+  stroke: 'black',
+  strokeWidth: 6,
+  closed: true,
+  tension: 0.6, // makes it smooth/curvy
+});
 
-// add the layer to the stage
+lemonGroup.add(lemonShape);
+layer.add(lemonGroup);
 stage.add(layer);
-
