@@ -11,27 +11,87 @@ const stage = new Konva.Stage({
 const layer = new Konva.Layer();
 stage.add(layer);
 
-// --- Create the custom lips shape using Konva.Path ---
-const lips = new Konva.Path({
+// --- Create the custom lemon shape ---
+const lemon = new Konva.Path({
   x: stage.width() / 2,
   y: stage.height() / 2,
-  // This 'data' string defines the outline of the lips.
-  // M = Move To, Q = Quadratic Bezier Curve
-  data: `
-    M -100, 0
-    Q 0 -90, 100 0
-    Q 0 90, -100 0
-  `,
+  data: 'M 25 10 C -30 -50, 40 -65, 70 -20 C 100 25, 25 55, 25 10',
   fill: 'yellow',
   stroke: 'black',
-  strokeWidth: 6,
-  scaleX: 1.5, // Scale the shape to make it larger
-  scaleY: 1.5,
-  closed: true, // This is crucial for filling the shape correctly
+  strokeWidth: 8,
+  scaleX: 2.2,
+  scaleY: 2.2,
+  closed: true,
+  // --- MAKE THE LEMON DRAGGABLE ---
+  draggable: true,
 });
 
-// Add the custom lips shape to the layer
-layer.add(lips);
+layer.add(lemon);
+
+// --- EVENT HANDLING & ANIMATIONS ---
+
+// 1. Change cursor to a pointer on hover
+lemon.on('mouseover', function () {
+  stage.container().style.cursor = 'pointer';
+});
+
+// 2. Change cursor back to default when not hovering
+lemon.on('mouseout', function () {
+  stage.container().style.cursor = 'default';
+});
+
+
+// 4. [Optional Challenge] Wiggle animation setup
+// We define the animation outside the event handler so we can start/stop it.
+const wiggleAnimation = new Konva.Animation((frame) => {
+  if (!frame) return;
+  // Use a sine wave to create a smooth back-and-forth rotation
+  const angle = 5; // Max wiggle angle in degrees
+  const period = 200; // Time in ms for a full wiggle cycle
+  const rotation = angle * Math.sin((frame.time * 2 * Math.PI) / period);
+  lemon.rotation(rotation);
+}, layer);
+
+
+// 3. Scale up and start wiggling on click/hold
+lemon.on('mousedown', () => {
+  // Use Konva.Tween for a smooth scaling animation
+  new Konva.Tween({
+    node: lemon,
+    duration: 0.1, // A quick, responsive animation
+    scaleX: 2.5,   // The target scale
+    scaleY: 2.5,
+    easing: Konva.Easings.EaseInOut,
+  }).play();
+
+  // Start the wiggle animation
+  wiggleAnimation.start();
+});
+
+// 3. Revert size and stop wiggling on release
+lemon.on('mouseup', () => {
+  // Tween back to the original size
+  new Konva.Tween({
+    node: lemon,
+    duration: 0.1,
+    scaleX: 2.2, // The original scale
+    scaleY: 2.2,
+    easing: Konva.Easings.EaseInOut,
+  }).play();
+
+  // Stop the wiggle animation
+  wiggleAnimation.stop();
+
+  // Smoothly reset the lemon's rotation back to 0
+  new Konva.Tween({
+      node: lemon,
+      duration: 0.2,
+      rotation: 0,
+      easing: Konva.Easings.EaseInOut
+  }).play();
+});
+
 
 // add the layer to the stage
 stage.add(layer);
+
