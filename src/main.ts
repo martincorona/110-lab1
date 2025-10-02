@@ -11,26 +11,27 @@ const stage = new Konva.Stage({
 const layer = new Konva.Layer();
 stage.add(layer);
 
-// --- Create the custom lemon shape using Konva.Path ---
-// This is the best method to create a non-symmetrical, organic shape.
-const lemon = new Konva.Path({
+// --- Create the custom lips shape using Konva.Path ---
+const lips = new Konva.Path({
   x: stage.width() / 2,
   y: stage.height() / 2,
-  // The 'data' string defines the shape using SVG path commands.
-  // It's like using a pen tool to draw the exact curves from your image.
-  // M = Move To, C = Cubic Bezier Curve
-  data: 'M 25 10 C -30 -50, 40 -65, 70 -20 C 100 25, 25 55, 25 10',
+  // This 'data' string defines the outline of the lips.
+  // M = Move To, Q = Quadratic Bezier Curve
+  data: `
+    M -100, 0
+    Q 0 -90, 100 0
+    Q 0 90, -100 0
+  `,
   fill: 'yellow',
   stroke: 'black',
-  strokeWidth: 8, // Thicker stroke to match the hand-drawn look
-  scaleX: 2.2,    // Scale the shape up to be more visible
-  scaleY: 2.2,
-  closed: true,   // Ensure the shape is a single, closed object
+  strokeWidth: 6,
+  scaleX: 1.5, // Scale the shape to make it larger
+  scaleY: 1.5,
+  closed: true, // This is crucial for filling the shape correctly
 });
 
-
-// Add the single custom shape to the layer
-layer.add(lemon);
+// Add the custom lips shape to the layer
+layer.add(lips);
 
 // add the layer to the stage
 stage.add(layer);
